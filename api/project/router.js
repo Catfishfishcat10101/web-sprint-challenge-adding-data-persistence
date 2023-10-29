@@ -1,25 +1,78 @@
 // build your `/api/projects` router here
 const express = require('express');
-const Projects = require('./model');
+const Project = require('./model');
 
 const router = express.Router();
 
-router.get('/projects', async (req, res) => {
-    try {
-        const projects = await Projects.getProjects();
-        res.json(projects);
-    } catch (err) {
-        res.status(500).json({ message: 'Failed to get projects' });
-    }
+// GET /api/projects
+router.get('/', async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve projects' });
+  }
 });
 
-router.post('/projects', async (req, res) => {
-    try {
-        const project = await Projects.addProject(req.body);
-        res.status(201).json(project);
-    } catch (err) {
-        res.status(500).json({ message: 'Failed to create new projecy' });
+// GET /api/projects/:id
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const project = await Project.findById(id);
+    if (project) {
+      res.status(200).json(project);
+    } else {
+      res.status(404).json({ message: 'Project not found' });
     }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve project' });
+  }
+});
+
+// POST /api/projects
+router.post('/', async (req, res) => {
+  const { name, description } = req.body;
+  try {
+    const newProject = await Project.create({ name, description });
+    res.status(201).json(newProject);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create project' });
+  }
+});
+
+// PUT /api/projects/:id
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+  try {
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { name, description },
+      { new: true }
+    );
+    if (updatedProject) {
+      res.status(200).json(updatedProject);
+    } else {
+      res.status(404).json({ message: 'Project not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update project' });
+  }
+});
+
+// DELETE /api/projects/:id
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedProject = await Project.findByIdAndDelete(id);
+    if (deletedProject) {
+      res.status(200).json({ message: 'Project deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Project not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
 });
 
 module.exports = router;
