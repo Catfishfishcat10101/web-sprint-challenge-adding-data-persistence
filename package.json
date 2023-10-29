@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand --silent"
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback"
   },
   "repository": {
     "type": "git",
@@ -14,9 +17,19 @@
     "cross-env": "7.0.3",
     "eslint": "8.14.0",
     "jest": "28.1.0",
+    "knex": "^3.0.1",
+    "nodemon": "^3.0.1",
     "supertest": "6.2.3"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "sqlite3": "^5.0.8"
-  }
+  },
+  "description": "## Tools",
+  "bugs": {
+    "url": "https://github.com/BloomInstituteOfTechnology/web-sprint-challenge-adding-data-persistence/issues"
+  },
+  "homepage": "https://github.com/BloomInstituteOfTechnology/web-sprint-challenge-adding-data-persistence#readme",
+  "keywords": [],
+  "author": ""
 }
